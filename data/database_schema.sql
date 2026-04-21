@@ -10,6 +10,7 @@ email varchar(200) not null,
 telefone char(15)
 );
 
+
 CREATE TABLE categoria (
 id int primary key auto_increment,
 nome_categoria varchar(200) not null
@@ -29,6 +30,7 @@ cadastrado_por int,
 constraint fk_id_usuario_entrada foreign key (cadastrado_por) references usuario(id)
 
 );
+
 
 CREATE TABLE saida_material (
 id int primary key auto_increment,
