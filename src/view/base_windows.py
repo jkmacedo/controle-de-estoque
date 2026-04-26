@@ -20,7 +20,7 @@ class BaseWindows(ctk.CTk):
 
         self.title(titulo) # titulo
         self.geometry(f'{largura}x{altura}') # define o tamanho da janela
-        self.configure(fg_color=self.cores["creme"]) # define a cor de fundo daa janela
+        self.configure(fg_color=self.cores["creme"]) # define a cor de fundo da janela
         self.resizable(False, False) # não deixar o usuario esticar nem pra cima ou pra baixo
 
         # definir configurações para os itens na janela se adaptarem ao tamanho da janela
