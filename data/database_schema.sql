@@ -24,7 +24,7 @@ quantidade int,
 endereçamento varchar(30) not null,
 
 id_categoria int,
-constraint fk_id_categotia foreign key (id_categoria) references categoria(id),
+constraint fk_id_categoria foreign key (id_categoria) references categoria(id),
 
 cadastrado_por int,
 constraint fk_id_usuario_entrada foreign key (cadastrado_por) references usuario(id)
