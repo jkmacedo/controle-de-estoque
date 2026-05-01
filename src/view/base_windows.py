@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 
 
 class BaseWindows(ctk.CTk):
@@ -16,7 +17,8 @@ class BaseWindows(ctk.CTk):
             "amarelo": "#FFB800",
             "preto": "#000000",
             "branco": "#FFFFFF",
-            "azul": "#03A2F1"
+            "azul": "#03A2F1",
+            "vermelho":"#DC0E0E"
         }
 
         self.title(titulo) # titulo
@@ -92,8 +94,39 @@ class BaseWindows(ctk.CTk):
         )
 
 
+    def msgbox_incorreto(self, mensagem):
+        CTkMessagebox(
+            title='Aviso do Sistema', 
+            message=mensagem, 
+            icon='cancel', 
+            option_1='Fechar',
+            fg_color=self.cores["amarelo"],
+            title_color=self.cores["branco"],
+            text_color=self.cores["marrom_escuro"],
+            button_color=self.cores["vermelho"],
+            button_hover_color=self.cores["marrom"],
+            border_color=self.cores["marrom_escuro"],
+            border_width=4,
+            header=True
+
+        )
 
 
+    def msgbox_correto(self, mensagem):
+        CTkMessagebox(
+            title='Aviso do Sistema',
+            message=mensagem,
+            icon='check',
+            option_1='Fechar',
+            fg_color=self.cores["azul"],
+            title_color=self.cores["branco"],
+            text_color=self.cores["marrom_escuro"],
+            button_color=self.cores["vermelho"],
+            button_hover_color=self.cores["marrom"],
+            border_color=self.cores["marrom_escuro"],
+            border_width=4,
+            header=True
+        )
 
 
 
@@ -101,4 +134,5 @@ class BaseWindows(ctk.CTk):
 if __name__ == "__main__":
     
     app = BaseWindows()
+    app.msgbox_correto('Login realizado com Sucesso!')
     app.mainloop()    
