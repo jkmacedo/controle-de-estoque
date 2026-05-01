@@ -4,21 +4,35 @@ from src.models.user_model import Usuario
 from src.repository.user_repository import RepositoryUser
 
 def executar_teste():
-    print("--- Instando Cadastro de Usuário ---")
-    
-    # 1. Coleta de dados
-    matricula = input('Matricula: ')
-    senha = input('Senha: ')
-    nome = input('Nome: ')
-    email = input('Email: ')
-    telefone = input('Telefone: ')
 
-    # 2. Criando o objeto Usuario (Verifique se o seu model usa 'tel=')
-    u = Usuario(matricula=matricula, senha=senha, nome=nome, email=email, telelefone=telefone)
-
-    # 3. Chamando o repositório
     r = RepositoryUser()
-    r.cadastrar_usuario(u)
+    print("--- Instando Cadastro de Usuário ---")
+
+
+    print('''
+    [1] buscar
+    [2] cadatrar
+    [3] atualizar
+             ''')
+    
+    escolha = input('>>>> ')
+    if escolha =='1':
+        u = Usuario(matricula=123456789, senha='123456789',nome='fulano', email='fulado@gamil.com', telelefone='(12) 98888-8888')
+        dados = r.buscar_dados(u)
+        print(dados)
+
+    elif escolha == '2':
+         
+        u = Usuario(matricula=123456779, senha='123456779',nome='fulano', email='fulado@gamil.com', telelefone='(12) 98888-8888')
+        r.cadastrar_usuario(u)
+
+    elif escolha == '3':
+        r.atualizar_dados_usuario(oque_mudar='email', id='1', novo_dado='kayky123@gmail.com')
+
+    
+   
+
+    
 
 if __name__ == "__main__":
     executar_teste()
