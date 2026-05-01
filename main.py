@@ -1,0 +1,1 @@
+print('Sistema de controle de estoque')
