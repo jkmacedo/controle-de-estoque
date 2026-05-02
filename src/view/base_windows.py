@@ -95,7 +95,7 @@ class BaseWindows(ctk.CTk):
 
 
     def msgbox_incorreto(self, mensagem):
-        CTkMessagebox(
+        return CTkMessagebox(
             title='Aviso do Sistema', 
             message=mensagem, 
             icon='cancel', 
@@ -113,7 +113,7 @@ class BaseWindows(ctk.CTk):
 
 
     def msgbox_correto(self, mensagem):
-        CTkMessagebox(
+        return CTkMessagebox(
             title='Aviso do Sistema',
             message=mensagem,
             icon='check',

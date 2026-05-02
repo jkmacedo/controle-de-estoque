@@ -1,12 +1,15 @@
 import customtkinter as ctk
+from src.controller.user_controller import ControllerUser
 from src.view.base_windows import BaseWindows
 from src.view.cadastro_user import CadastroUser
 
 
 
+
 class LoginUser(BaseWindows):
-     def __init__(self, titulo='Login - Usuário', largura=400, altura=500):
+     def __init__(self, titulo='Almoxarife', largura=400, altura=500):
           super().__init__(titulo, largura, altura)
+          self.controle = ControllerUser()
 
           # criando frame master
           self.frame_principal = self.criar_frame(self)
@@ -60,14 +63,14 @@ class LoginUser(BaseWindows):
      def buttons(self):
           
           # butão de verificação de login ENTRAR
-          bttn = self.criar_botao(self.frame_principal, texto="ENTRAR", espessura=45, fg_cor=self.cores["amarelo"], hover_cor=self.cores["marrom"], comando= lambda: print('ENTRAR... TESTANDO...'))
+          bttn = self.criar_botao(self.frame_principal, texto="ENTRAR", espessura=45, fg_cor=self.cores["amarelo"], hover_cor=self.cores["marrom"], comando= lambda: self.enviar_para_controle())
           bttn.place(relx=0.5, rely=1, anchor="center", y=-145)
 
           # cria link para abrir a janela de CADASTRO
           bttn_link = self.criar_label(self.frame_principal, texto='Não tem cadastro? Casdastre-se aqui', front='underline', cor_texto=self.cores["azul"], mao=True)
           bttn_link.place(relx=0.5, rely=1, anchor='center', y=-80)
 
-          # comando do link
+          # comando do link, chamei o metodo "aparecer_tela_cadastro"
           bttn_link.bind("<Button-1>", lambda e:self.aparecer_tela_cadastro())
 
 
@@ -78,6 +81,28 @@ class LoginUser(BaseWindows):
           cdt = CadastroUser()
           # chama a tela de cadastro
           cdt.tela_de_cadastro()
+
+
+     def enviar_para_controle(self):
+          
+          dados = {
+               "matricula": self.matricula_login.get(), # pega o valor que o usuario digitou na matricula
+               "senha": self.senha_login.get() # pega o valor que o usuario digitou na senha
+          }
+          funcionou = self.controle.validar_dados(dados=dados) # chamo a função verificar os dados e retorn "true" se der certo
+
+          # limpa os campos matricula e senha nos entry's
+          self.matricula_login.delete(0, 'end')
+          self.senha_login.delete(0, 'end')
+
+
+          # se usuario e senha tiver correto eu chamo o dashbord
+          if funcionou:
+               print('DASHBORD')
+
+
+
+
 
 
 

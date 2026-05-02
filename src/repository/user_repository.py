@@ -1,5 +1,4 @@
 from src.database.connection import cria_conexao
-from src.models.user_model import Usuario
 
 
 class RepositoryUser:
@@ -24,10 +23,9 @@ class RepositoryUser:
 
     
 
-    def buscar_dados(self, objeto):
-        sql = 'SELECT * FROM usuario WHERE matricula = %s AND senha = %s'
-        valores = (objeto.matricula, objeto.senha)
-
+    def buscar_dados(self, matricula, senha):
+        sql = 'SELECT matricula, senha FROM usuario WHERE matricula = %s AND senha = %s'
+        valores = (matricula, senha)
         try:
             with cria_conexao() as conexao:
                 with conexao.cursor() as cursor:
@@ -42,6 +40,7 @@ class RepositoryUser:
         
         except Exception as erro:
             print(f'Erro: {erro}')
+            return False
 
 
     def cadastrar_usuario(self, objeto):
