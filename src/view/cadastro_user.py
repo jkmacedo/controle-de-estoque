@@ -4,7 +4,7 @@ from src.view.base_windows import BaseWindows
 
 class CadastroUser(BaseWindows):
     def __init__(self, titulo='Cadastar - Usuário', largura=400, altura=500):
-        super().__init__(titulo, largura, altura)
+        super().__init__(titulo, largura=500, altura=600)
 
 
 

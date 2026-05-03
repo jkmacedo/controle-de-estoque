@@ -75,12 +75,15 @@ class LoginUser(BaseWindows):
 
 
      def aparecer_tela_cadastro(self):
-          # escomfe o freme principal da tela de login
-          self.frame_principal.place_forget()
-          # estâcia
+          # destroi o freme principal da tela de login
+          self.destroy()
+          # estacia
           cdt = CadastroUser()
           # chama a tela de cadastro
           cdt.tela_de_cadastro()
+          # execulta o cadastroUser
+          cdt.mainloop()
+
 
 
      def enviar_para_controle(self):
