@@ -111,7 +111,7 @@ class BaseWindows(ctk.CTk):
         return CTkMessagebox(
             title='Aviso do Sistema', 
             message=mensagem, 
-            icon='cancel', 
+            icon=None, 
             option_1='Fechar',
             fg_color=self.cores["amarelo"],
             title_color=self.cores["branco"],
@@ -129,7 +129,7 @@ class BaseWindows(ctk.CTk):
         return CTkMessagebox(
             title='Aviso do Sistema',
             message=mensagem,
-            icon='check',
+            icon=None,
             option_1='Fechar',
             fg_color=self.cores["azul"],
             title_color=self.cores["branco"],
