@@ -75,6 +75,12 @@ class LoginUser(BaseWindows):
 
 
      def aparecer_tela_cadastro(self):
+          # Aguarda 150 milissegundos (tempo para a animação acabar) e chama a destruição
+          self.after(150, self._abrir_cadastro)
+
+
+
+     def _abrir_cadastro(self):
           # estou importando dentro do metodo pra não ocorrer importação circular
           from src.view.cadastro_user import CadastroUser
           

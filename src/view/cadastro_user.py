@@ -93,6 +93,11 @@ class CadastroUser(BaseWindows):
         
         
     def voltar_tela_login(self):
+        # Agendamento seguro
+        self.after(150, self._abrir_login)
+
+
+    def _abrir_login(self):
         # estou importando dentro do metodo pra não ocorrer importação circular
         from src.view.login_user import LoginUser
         
