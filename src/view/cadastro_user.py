@@ -101,8 +101,10 @@ class CadastroUser(BaseWindows):
         # estou importando dentro do metodo pra não ocorrer importação circular
         from src.view.login_user import LoginUser
         
-        # destroy a janela cadastro
-        self.destroy()
+        # esconde a janela pro usuário achar que a janela fechou instatâniamente
+        self.withdraw()
+        # saí no "mainloop"
+        self.quit()
         # inicia a classe
         tl = LoginUser()
         # chamando a tela
