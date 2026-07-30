@@ -2,7 +2,7 @@ import customtkinter as ctk
 from src.view.base_windows import BaseWindows
 from src.controller.user_controller import ControllerUser
 
-
+ 
 class CadastroUser(BaseWindows):
     def __init__(self, titulo='Cadastar - Usuário', largura=400, altura=500):
         super().__init__(titulo, largura=500, altura=600)
