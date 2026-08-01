@@ -19,9 +19,12 @@ class BaseWindows(ctk.CTk):
             "dourado": "#DB9E04",
             "preto": "#000000",
             "branco": "#FFFFFF",
+            "cinza": "#D2CFCF",
+            "cinza2": "#C1BFBF",
             "azul": "#03A2F1",
             "vermelho":"#DC0E0E",
-            "vermelho2":"#EF6779"
+            "vermelho2":"#EF6779",
+            "sangue":"#920014"
         }
 
         self.title(titulo) # titulo
@@ -35,14 +38,16 @@ class BaseWindows(ctk.CTk):
 
 
     # função para criar frame
-    def criar_frame(self, master, fg_cor=False, largura=400, altura=500):
+    def criar_frame(self, master, fg_cor=False, largura=400, altura=500, borda=False, espessuraborda=1):
         
         return ctk.CTkFrame(
                master,
                fg_color=fg_cor if fg_cor else self.cores["marrom_escuro"],
                corner_radius=1,
                width=largura,
-               height=altura
+               height=altura,
+               border_color= self.cores["marrom"] if borda else None,
+               border_width= espessuraborda if borda else None
           )
 
 
