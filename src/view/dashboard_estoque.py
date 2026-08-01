@@ -3,7 +3,7 @@ from src.view.base_windows import BaseWindows
 
 class DashboardEstoque(BaseWindows):
 
-    def __init__(self, titulo='Dashdbard', largura=950, altura=550):
+    def __init__(self, titulo='Dashbard', largura=950, altura=550):
         super().__init__(titulo, largura, altura)
 
         self.frame_principal = self.criar_frame(self,largura=950, altura=550, fg_cor=self.cores["creme"])
@@ -63,7 +63,7 @@ class DashboardEstoque(BaseWindows):
         # QUANTIDADES
 
         # 1.1 cria texto do informativo de quantidade
-        text_total_item = self.criar_label(info_itens_cadastrados, texto="Total de Itens Cadastrado", negrito=True)
+        text_total_item = self.criar_label(info_itens_cadastrados, texto="Total de Itens Cadastrados", negrito=True)
         text_total_item.place(x=110, y=20, anchor="center")
 
         # 1.2 cria a quantidade ---
@@ -102,17 +102,18 @@ class DashboardEstoque(BaseWindows):
         text_banner.place(relx=0.5, rely=0.5, anchor="center")
 
 
-
-
-
-
-
-
-
-
-
-
-
+        # ações frame
+        action_frame = self.criar_frame(frame_edit, fg_cor=self.cores["branco"], largura=250, altura=200)
+        action_frame.place(relx=0.5, rely=0.5, y=0, anchor="center")
+        # ações Entry
+        self.qtd_item = self.criar_entry(action_frame, placeholder="Quantidade a retirar/adcionar", largura=230)
+        self.qtd_item.place(relx=0.5, y=30, anchor="center")
+        # botão dar baixa / retirar
+        bttn_retirar = self.criar_botao(action_frame, texto="Dar baixa / Retirar", comando=None, cor_texto=self.cores["preto"], largura=230, fg_cor=self.cores["dourado"], hover_cor=self.cores["amarelo"])
+        bttn_retirar.place(relx=0.5, y=80, anchor="center")
+        # botão de adcionar ao estoque
+        bttn_adcionar = self.criar_botao(action_frame, texto="+ Adiconar ao Estoque", comando=None, largura=230, fg_cor=self.cores["marrom_escuro"], hover_cor=self.cores["marrom"])
+        bttn_adcionar.place(relx=0.5, y=120, anchor="center")
 
 
         # buttons frame
