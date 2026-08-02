@@ -1,12 +1,17 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
+from src.controller.item_controler import ControllerItem
 from src.view.base_windows import BaseWindows
+
 
 class DashboardEstoque(BaseWindows):
 
     def __init__(self, titulo='Dashbard', largura=950, altura=550):
         super().__init__(titulo, largura, altura)
+
+        self.control = ControllerItem()
+
 
         self.frame_principal = self.criar_frame(self,largura=950, altura=550, fg_cor=self.cores["creme"])
         self.frame_principal.place(relx=0.5, rely=0.5, anchor='center')
@@ -142,7 +147,7 @@ class DashboardEstoque(BaseWindows):
 
         style.configure(
             "Treeview",
-            background=self.cores["creme"],
+            background=self.cores["branco"],
             foreground=self.cores["marrom_escuro"],
             rowheight=30,
             fieldbackground=self.cores["branco"]
@@ -152,12 +157,12 @@ class DashboardEstoque(BaseWindows):
             "Treeview.Heading",
             background=self.cores["marrom_escuro"],
             foreground=self.cores["amarelo"],
-            font=("arial", 11, "bold")
+            font=("arial", 11, "bold"),
         )
 
         # treeview
-        self.tree = ttk.Treeview(frame_treeview, columns=('id', 'nome', 'cat', 'qtd', 'status'), show='headings')
-        self.tree.place(x=3, y=10, relwidth=0.96, relheight=0.95)
+        self.tree = ttk.Treeview(frame_treeview, columns=('id', 'nome', 'end', 'qtd', 'cat'), show='headings')
+        self.tree.place(x=3, y=10, relwidth=0.96, relheight=0.85)
 
         # barra de rolagem
         barra_de_rolagem = ctk.CTkScrollbar(
@@ -177,20 +182,30 @@ class DashboardEstoque(BaseWindows):
         # configuração das colunas TITULOS
         self.tree.heading('id', text="ID")
         self.tree.heading('nome', text="NOME")
-        self.tree.heading('cat', text="CATEGORIA")
+        self.tree.heading('end', text="ENDEREÇO")
         self.tree.heading('qtd', text="QUANTIDADE")
-        self.tree.heading('status', text="STATUS")
+        self.tree.heading('cat', text="CATEGORIA")
 
         # configuração das colunas
         self.tree.column('id', width=60, anchor="center")
         self.tree.column('nome', width=220, anchor="w")
-        self.tree.column('cat', width=140, anchor="w")
+        self.tree.column('end', width=140, anchor="center")
         self.tree.column('qtd', width=90, anchor="center")
-        self.tree.column('status', width=110, anchor="center")
+        self.tree.column('cat', width=110, anchor="center")
+
+        self.control.Preencher_treview(tv=self.tree)
+
+        
 
 
 
 
+    
+
+
+
+
+        
 
 
 
