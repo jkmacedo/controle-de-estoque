@@ -44,4 +44,3 @@ constraint fk_id_usario_saida foreign key (id_usuario) references usuario(id),
 constraint fk_id_material_saida foreign key (id_material) references material(id)
 );
 
-

@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import tkinter as tk
+from tkinter import ttk
 from src.view.base_windows import BaseWindows
 
 class DashboardEstoque(BaseWindows):
@@ -18,6 +20,7 @@ class DashboardEstoque(BaseWindows):
         self.banner()
         self.banner_informativo()
         self.edit_estoque()
+        self.treeview()
 
 
     def banner(self):
@@ -125,6 +128,65 @@ class DashboardEstoque(BaseWindows):
         # cria botão de excluir
         button_edit = self.criar_botao(banner_button, comando=None, texto="[ Excluir ]", largura=115, cor_texto=self.cores["preto"], fg_cor=self.cores["cinza2"], hover_cor=self.cores["branco"])
         button_edit.place(x=187, rely=0.5, anchor="center")
+
+    def treeview(self):
+
+        # freme principal do TreeView
+        frame_treeview = self.criar_frame(self.frame_principal, fg_cor=self.cores["amarelo2"], largura=670, altura=310)
+        frame_treeview.place(relx=0.5, rely=0.5,x=-135, y=111, anchor="center")
+
+
+        # CONFIGURAÇÃO DE ESTILO DO TREEVIEW
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        style.configure(
+            "Treeview",
+            background=self.cores["creme"],
+            foreground=self.cores["marrom_escuro"],
+            rowheight=30,
+            fieldbackground=self.cores["branco"]
+        )
+
+        style.configure(
+            "Treeview.Heading",
+            background=self.cores["marrom_escuro"],
+            foreground=self.cores["amarelo"],
+            font=("arial", 11, "bold")
+        )
+
+        # treeview
+        self.tree = ttk.Treeview(frame_treeview, columns=('id', 'nome', 'cat', 'qtd', 'status'), show='headings')
+        self.tree.place(x=3, y=10, relwidth=0.96, relheight=0.95)
+
+        # barra de rolagem
+        barra_de_rolagem = ctk.CTkScrollbar(
+            frame_treeview,
+            orientation='vertical',
+            command=self.tree.yview,
+            fg_color='transparent',
+            button_color=self.cores["branco"],
+            button_hover_color=self.cores["azul"]
+        )
+        barra_de_rolagem.place(relx=0.96, rely=0.0, relwidth=0.04, relheight=1.0)
+
+        # inserindo a barra de rolagem no treeview
+        self.tree.configure(yscrollcommand=barra_de_rolagem.set)
+        
+
+        # configuração das colunas TITULOS
+        self.tree.heading('id', text="ID")
+        self.tree.heading('nome', text="NOME")
+        self.tree.heading('cat', text="CATEGORIA")
+        self.tree.heading('qtd', text="QUANTIDADE")
+        self.tree.heading('status', text="STATUS")
+
+        # configuração das colunas
+        self.tree.column('id', width=60, anchor="center")
+        self.tree.column('nome', width=220, anchor="w")
+        self.tree.column('cat', width=140, anchor="w")
+        self.tree.column('qtd', width=90, anchor="center")
+        self.tree.column('status', width=110, anchor="center")
 
 
 
