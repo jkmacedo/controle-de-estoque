@@ -118,10 +118,26 @@ class DashboardEstoque(BaseWindows):
         self.qtd_item = self.criar_entry(action_frame, placeholder="Quantidade a retirar/adcionar", largura=230)
         self.qtd_item.place(relx=0.5, y=30, anchor="center")
         # botão dar baixa / retirar
-        bttn_retirar = self.criar_botao(action_frame, texto="Dar baixa / Retirar", comando=lambda: self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "subtrair"), cor_texto=self.cores["preto"], largura=230, fg_cor=self.cores["dourado"], hover_cor=self.cores["amarelo"])
+        bttn_retirar = self.criar_botao(action_frame, texto="Dar baixa / Retirar", 
+                                        comando=lambda: [
+                                            self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "subtrair"), 
+                                            self.control.Preencher_treview(tv=self.tree), 
+                                            self.qtd_item.delete(0, "end")], 
+                                        cor_texto=self.cores["preto"], 
+                                        largura=230, 
+                                        fg_cor=self.cores["dourado"], 
+                                        hover_cor=self.cores["amarelo"])
         bttn_retirar.place(relx=0.5, y=80, anchor="center")
         # botão de adcionar ao estoque
-        bttn_adcionar = self.criar_botao(action_frame, texto="+ Adiconar ao Estoque", comando=lambda: self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "adicionar"), largura=230, fg_cor=self.cores["marrom_escuro"], hover_cor=self.cores["marrom"])
+        bttn_adcionar = self.criar_botao(action_frame, texto="+ Adiconar ao Estoque", 
+                                         comando=lambda: [
+                                             self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "adicionar"), 
+                                             self.control.Preencher_treview(tv=self.tree), 
+                                             self.qtd_item.delete(0, "end")
+                                             ], 
+                                         largura=230, 
+                                         fg_cor=self.cores["marrom_escuro"], 
+                                         hover_cor=self.cores["marrom"])
         bttn_adcionar.place(relx=0.5, y=120, anchor="center")
 
 
