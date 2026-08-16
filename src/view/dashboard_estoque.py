@@ -7,11 +7,16 @@ from src.view.base_windows import BaseWindows
 
 class DashboardEstoque(BaseWindows):
 
-    def __init__(self, titulo='Dashbard', largura=950, altura=550):
+    def __init__(self, titulo='Dashbard', largura=950, altura=550): 
         super().__init__(titulo, largura, altura)
 
         self.control = ControllerItem()
 
+        self.itens_baixa_quantidade = ctk.StringVar()
+
+        self.total_de_itens = ctk.StringVar()
+        self.total_de_itens.set(str(self.control.total_de_itens()))
+        
 
         self.frame_principal = self.criar_frame(self,largura=950, altura=550, fg_cor=self.cores["creme"])
         self.frame_principal.place(relx=0.5, rely=0.5, anchor='center')
@@ -75,7 +80,7 @@ class DashboardEstoque(BaseWindows):
         text_total_item.place(x=110, y=20, anchor="center")
 
         # 1.2 cria a quantidade ---
-        total_item_cad = self.criar_label(info_itens_cadastrados, tamanho_letra=40, texto=str(self.control.total_de_itens()), negrito=True)
+        total_item_cad = self.criar_label(info_itens_cadastrados, tamanho_letra=40, tvariavel=self.total_de_itens, negrito=True)
         total_item_cad.place(x=42, y=60, anchor="center")
 
         # 2.1 cria texto do informativo de retiradas
@@ -92,7 +97,7 @@ class DashboardEstoque(BaseWindows):
         text_total_item.place(x=103, y=20, anchor="center")
                 
         # 3.2 cria a quantidade ---
-        total_item_ret = self.criar_label(info_itens_baixo, tamanho_letra=40, texto=str(self.control.itens_baixa_quantidade()), negrito=True, cor_texto=self.cores["sangue"])
+        total_item_ret = self.criar_label(info_itens_baixo, tamanho_letra=40, tvariavel=self.itens_baixa_quantidade, negrito=True, cor_texto=self.cores["sangue"])
         total_item_ret.place(x=42, y=60, anchor="center")
 
     def edit_estoque(self):
@@ -122,7 +127,8 @@ class DashboardEstoque(BaseWindows):
                                         comando=lambda: [
                                             self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "subtrair"), 
                                             self.control.Preencher_treview(tv=self.tree), 
-                                            self.qtd_item.delete(0, "end")], 
+                                            self.qtd_item.delete(0, "end"),
+                                            self.itens_baixa_quantidade.set(str(self.control.itens_baixa_quantidade()))], 
                                         cor_texto=self.cores["preto"], 
                                         largura=230, 
                                         fg_cor=self.cores["dourado"], 
@@ -133,7 +139,8 @@ class DashboardEstoque(BaseWindows):
                                          comando=lambda: [
                                              self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "adicionar"), 
                                              self.control.Preencher_treview(tv=self.tree), 
-                                             self.qtd_item.delete(0, "end")
+                                             self.qtd_item.delete(0, "end"),
+                                             self.itens_baixa_quantidade.set(str(self.control.itens_baixa_quantidade()))
                                              ], 
                                          largura=230, 
                                          fg_cor=self.cores["marrom_escuro"], 

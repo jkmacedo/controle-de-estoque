@@ -52,12 +52,12 @@ class BaseWindows(ctk.CTk):
 
 
     # Função para criar texto;
-    def criar_label(self, master, texto, front='normal', tamanho_letra=16, negrito=False, mao=False, cor_texto=False):
-
+    def criar_label(self, master, texto='', front='normal',tvariavel=None, tamanho_letra=16, negrito=False, mao=False, cor_texto=False):
         # retorna um label (texto)
         return ctk.CTkLabel(
             master,
             text=texto,
+            textvariable=tvariavel,
             font= ("Roboto", tamanho_letra, "bold" if negrito else front),
             text_color= cor_texto if cor_texto else self.cores["creme"],
             cursor= 'hand2' if mao else 'arrow'
