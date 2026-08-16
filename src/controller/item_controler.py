@@ -14,12 +14,12 @@ class ControllerItem:
         # limpa o treeview antes inserir
         for i in tv.get_children():
             tv.delete(i)
-            # busca os dados no database
-            emEstoque = self.repo.buscar_itens()
-            # inseri o item
-            for item in emEstoque:
-                id, nome, endereco, quantidade, categoria = item
-                tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
+        # busca os dados no database
+        emEstoque = self.repo.buscar_itens()
+        # inseri o item
+        for item in emEstoque:
+            id, nome, endereco, quantidade, categoria = item
+            tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
 
 
     
