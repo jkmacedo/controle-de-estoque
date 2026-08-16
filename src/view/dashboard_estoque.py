@@ -75,7 +75,7 @@ class DashboardEstoque(BaseWindows):
         text_total_item.place(x=110, y=20, anchor="center")
 
         # 1.2 cria a quantidade ---
-        total_item_cad = self.criar_label(info_itens_cadastrados, tamanho_letra=40, texto="100", negrito=True)
+        total_item_cad = self.criar_label(info_itens_cadastrados, tamanho_letra=40, texto=str(self.control.total_de_itens()), negrito=True)
         total_item_cad.place(x=42, y=60, anchor="center")
 
         # 2.1 cria texto do informativo de retiradas
@@ -83,7 +83,7 @@ class DashboardEstoque(BaseWindows):
         text_total_item.place(x=79, y=20, anchor="center")
         
         # 2.2 cria a quantidade ---
-        total_item_ret = self.criar_label(info_itens_retirados, tamanho_letra=40, texto="100", negrito=True, cor_texto=self.cores["preto"])
+        total_item_ret = self.criar_label(info_itens_retirados, tamanho_letra=40, texto=str(self.control.retirada_material()), negrito=True, cor_texto=self.cores["preto"])
         total_item_ret.place(x=42, y=60, anchor="center")
 
 
@@ -92,7 +92,7 @@ class DashboardEstoque(BaseWindows):
         text_total_item.place(x=103, y=20, anchor="center")
                 
         # 3.2 cria a quantidade ---
-        total_item_ret = self.criar_label(info_itens_baixo, tamanho_letra=40, texto="100", negrito=True, cor_texto=self.cores["sangue"])
+        total_item_ret = self.criar_label(info_itens_baixo, tamanho_letra=40, texto=str(self.control.itens_baixa_quantidade()), negrito=True, cor_texto=self.cores["sangue"])
         total_item_ret.place(x=42, y=60, anchor="center")
 
     def edit_estoque(self):

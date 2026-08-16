@@ -22,4 +22,14 @@ class ControllerItem:
             tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
 
 
-    
+    def total_de_itens(self):
+        total = self.repo.total_de_itens()
+        return total
+
+    def retirada_material(self):
+        total = self.repo.item_retirada()
+        return total
+
+    def itens_baixa_quantidade(self):
+        total = self.repo.executar_consulta()
+        return total

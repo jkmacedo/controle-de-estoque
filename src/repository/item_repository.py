@@ -23,10 +23,42 @@ class RepositoryItem:
 
         except Exception as erro:
             print(f"Erro: {erro}")
-            return False
+            return 0
 
 
 
+    def total_de_itens(self):
+        sql = "SELECT COUNT(*) FROM material;"
+        try:
+            with cria_conexao() as conexao:
+                with conexao.cursor() as cursor:
+                    cursor.execute(sql)
+                    total = cursor.fetchone()[0]  # pega o primeiro elemento da tupla retornada
+                    return total
+        except Exception as erro:
+            print(f"Erro: {erro}")
+            return 0
 
+    def item_retirada(self):
+        sql = "SELECT COUNT(*) AS retiradas_hoje FROM saida_material WHERE DATE(data_retirada) = CURDATE();"
+        try:
+            with cria_conexao() as conexao:
+                with conexao.cursor() as cursor:
+                    cursor.execute(sql)
+                    total = cursor.fetchone()[0]  # pega o primeiro elemento da tupla retornada
+                    return total
+        except Exception as erro:
+            print(f"Erro: {erro}")
+            return 0
 
-
+    def executar_consulta(self):
+        sql = "SELECT COUNT(*) AS baixa_quantidade FROM material WHERE quantidade < 10;"
+        try:
+            with cria_conexao() as conexao:
+                with conexao.cursor() as cursor:
+                    cursor.execute(sql)
+                    total = cursor.fetchone()[0]  # pega o primeiro elemento da tupla retornada
+                    return total
+        except Exception as erro:
+            print(f"Erro: {erro}")
+            return 0
