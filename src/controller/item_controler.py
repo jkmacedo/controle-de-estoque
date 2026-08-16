@@ -11,10 +11,9 @@ class ControllerItem:
 
     def Preencher_treview(self, tv):
 
-            # limpa o treeview antes inserir
-            for i in tv.get_children():
-                tv.delete(i)
-
+        # limpa o treeview antes inserir
+        for i in tv.get_children():
+            tv.delete(i)
             # busca os dados no database
             emEstoque = self.repo.buscar_itens()
             # inseri o item
