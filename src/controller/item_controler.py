@@ -24,13 +24,16 @@ class ControllerItem:
         total = self.repo.total_de_itens()
         return total
 
+
     def retirada_material(self):
         total = self.repo.item_retirada()
         return total
 
+
     def itens_baixa_quantidade(self):
         total = self.repo.executar_consulta()
         return total
+
 
     def filtrar_treeview(self, event, tv, search):
         search = search.lower()  # Converte a pesquisa para minúsculas
@@ -40,3 +43,12 @@ class ControllerItem:
             id, nome, endereco, quantidade, categoria = item
             if search in nome.lower() or search in categoria.lower():
                 tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
+
+
+    def adionar_ou_subtrair_estoque(self, id_material, quantidade, acao):
+        if acao == "adicionar":
+            self.repo.adionar_ou_subtrair_estoque(id_material, quantidade, acao)
+        elif acao == "subtrair":
+            self.repo.adionar_ou_subtrair_estoque(id_material, quantidade, acao)
+        else:
+            raise ValueError("Ação inválida. Use 'adicionar' ou 'subtrair'.")

@@ -113,37 +113,35 @@ class DashboardEstoque(BaseWindows):
         # ações frame
         action_frame = self.criar_frame(frame_edit, fg_cor=self.cores["branco"], largura=250, altura=200)
         action_frame.place(relx=0.5, rely=0.5, y=0, anchor="center")
+
         # ações Entry
         self.qtd_item = self.criar_entry(action_frame, placeholder="Quantidade a retirar/adcionar", largura=230)
         self.qtd_item.place(relx=0.5, y=30, anchor="center")
         # botão dar baixa / retirar
-        bttn_retirar = self.criar_botao(action_frame, texto="Dar baixa / Retirar", comando=None, cor_texto=self.cores["preto"], largura=230, fg_cor=self.cores["dourado"], hover_cor=self.cores["amarelo"])
+        bttn_retirar = self.criar_botao(action_frame, texto="Dar baixa / Retirar", comando=lambda: self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "subtrair"), cor_texto=self.cores["preto"], largura=230, fg_cor=self.cores["dourado"], hover_cor=self.cores["amarelo"])
         bttn_retirar.place(relx=0.5, y=80, anchor="center")
         # botão de adcionar ao estoque
-        bttn_adcionar = self.criar_botao(action_frame, texto="+ Adiconar ao Estoque", comando=None, largura=230, fg_cor=self.cores["marrom_escuro"], hover_cor=self.cores["marrom"])
+        bttn_adcionar = self.criar_botao(action_frame, texto="+ Adiconar ao Estoque", comando=lambda: self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), int(self.qtd_item.get()), "adicionar"), largura=230, fg_cor=self.cores["marrom_escuro"], hover_cor=self.cores["marrom"])
         bttn_adcionar.place(relx=0.5, y=120, anchor="center")
 
 
         # buttons frame
         banner_button = self.criar_frame(frame_edit, fg_cor=self.cores["cinza"], largura=250, altura=50)
         banner_button.place(relx=0.5, rely=0.5, y=125, anchor="center")
+
         # cria o boão de edição 
         button_edit = self.criar_botao(banner_button, comando=None, texto="[ Editar ]", largura=115, cor_texto=self.cores["preto"], fg_cor=self.cores["cinza2"], hover_cor=self.cores["branco"])
         button_edit.place(x=63, rely=0.5, anchor="center")
+
         # cria botão de excluir
-        button_edit = self.criar_botao(banner_button, comando=None, texto="[ Excluir ]", largura=115, cor_texto=self.cores["preto"], fg_cor=self.cores["cinza2"], hover_cor=self.cores["branco"])
-        button_edit.place(x=187, rely=0.5, anchor="center")
+        button_excluir = self.criar_botao(banner_button, comando=None, texto="[ Excluir ]", largura=115, cor_texto=self.cores["preto"], fg_cor=self.cores["cinza2"], hover_cor=self.cores["branco"])
+        button_excluir.place(x=187, rely=0.5, anchor="center")
 
     def treeview(self):
 
         # freme principal do TreeView
         frame_treeview = self.criar_frame(self.frame_principal, fg_cor=self.cores["amarelo2"], largura=670, altura=310)
         frame_treeview.place(relx=0.5, rely=0.5,x=-135, y=111, anchor="center")
-
-
-        search = self.criar_entry(frame_treeview, placeholder="Pesquisar por nome ou categoria", largura=630, espessura=35)
-        search.place(relx=0.5, x=-18, y=21, anchor="center")
-        search.bind("<KeyRelease>", lambda event: self.control.filtrar_treeview(event, self.tree, search.get()))
 
 
         # CONFIGURAÇÃO DE ESTILO DO TREEVIEW
@@ -164,6 +162,12 @@ class DashboardEstoque(BaseWindows):
             foreground=self.cores["amarelo"],
             font=("arial", 11, "bold"),
         )
+
+
+        # cria a entry de pesquisa
+        search = self.criar_entry(frame_treeview, placeholder="Pesquisar por nome ou categoria", largura=630, espessura=35)
+        search.place(relx=0.5, x=-18, y=21, anchor="center")
+        search.bind("<KeyRelease>", lambda event: self.control.filtrar_treeview(event, self.tree, search.get()))
 
         # treeview
         self.tree = ttk.Treeview(frame_treeview, columns=('id', 'nome', 'end', 'qtd', 'cat'), show='headings')
@@ -199,6 +203,19 @@ class DashboardEstoque(BaseWindows):
         self.tree.column('cat', width=110, anchor="center")
 
         self.control.Preencher_treview(tv=self.tree)
+
+
+
+    @staticmethod
+    def _ao_clicar_item(tv):
+        event = tv.bind("<<TreeviewSelect>>")
+        item_selecionado = tv.selection()
+        if item_selecionado:
+            id_interno = item_selecionado[0]
+            valores = tv.item(id_interno, "values")
+            id_item = valores[0]  # Obtém o ID do item selecionado
+            return id_item # Obtém o ID do item selecionado
+       
 
         
 
