@@ -141,6 +141,11 @@ class DashboardEstoque(BaseWindows):
         frame_treeview.place(relx=0.5, rely=0.5,x=-135, y=111, anchor="center")
 
 
+        search = self.criar_entry(frame_treeview, placeholder="Pesquisar por nome ou categoria", largura=630, espessura=35)
+        search.place(relx=0.5, x=-18, y=21, anchor="center")
+        search.bind("<KeyRelease>", lambda event: self.control.filtrar_treeview(event, self.tree, search.get()))
+
+
         # CONFIGURAÇÃO DE ESTILO DO TREEVIEW
         style = ttk.Style()
         style.theme_use("clam")
@@ -162,7 +167,7 @@ class DashboardEstoque(BaseWindows):
 
         # treeview
         self.tree = ttk.Treeview(frame_treeview, columns=('id', 'nome', 'end', 'qtd', 'cat'), show='headings')
-        self.tree.place(x=3, y=10, relwidth=0.96, relheight=0.85)
+        self.tree.place(x=3, y=50, relwidth=0.96, relheight=0.85)
 
         # barra de rolagem
         barra_de_rolagem = ctk.CTkScrollbar(
