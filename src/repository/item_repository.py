@@ -2,26 +2,23 @@ from src.database.connection import cria_conexao
 
 
 class RepositoryItem:
-    
+
     def __init__(self):
         pass
 
 
-    def buscar_itens(self):  # busca dados pra verificar o so a validação do loginl
-        sql = "SELECT m.id, m.nome_produto, m.endereçamento, m.quantidade, c.nome_categoria FROM material m INNER JOIN categoria c ON m.id_categoria = c.id;"
+    def buscar_itens(self):  # busca todos os materiais com o nome da categoria
+        # LEFT JOIN pra não esconder materiais sem categoria (o total de itens conta todos)
+        sql = "SELECT m.id, m.nome_produto, m.endereçamento, m.quantidade, COALESCE(c.nome_categoria, 'Sem categoria') FROM material m LEFT JOIN categoria c ON m.id_categoria = c.id;"
         try:
             with cria_conexao() as conexao:
                 with conexao.cursor() as cursor:
                     cursor.execute(sql)
-                    emEstoque = cursor.fetchall()  # pegando o dado que coresponde a matricula e senha
-                    if emEstoque:
-                        return emEstoque  # retorna a tupla com todos os valores
-                    else:
-                        return False
+                    return cursor.fetchall()  # lista de tuplas (lista vazia se não houver itens)
 
         except Exception as erro:
             print(f"Erro: {erro}")
-            return 0
+            return []
 
 
 
@@ -63,18 +60,40 @@ class RepositoryItem:
             print(f"Erro: {erro}")
             return 0
 
-    def adionar_ou_subtrair_estoque(self, id_material, quantidade, acao):
+    def adionar_ou_subtrair_estoque(self, id_material, quantidade, acao, id_usuario=None):
         if acao == "adicionar":
-            sql = "UPDATE material SET quantidade = quantidade + %s WHERE id = %s"
+            # COALESCE porque a coluna quantidade aceita NULL (NULL + 5 continuaria NULL)
+            sql = "UPDATE material SET quantidade = COALESCE(quantidade, 0) + %s WHERE id = %s"
+            valores = (quantidade, id_material)
         elif acao == "subtrair":
-            sql = "UPDATE material SET quantidade = quantidade - %s WHERE id = %s"
+            # só subtrai se tiver quantidade suficiente, pra o estoque nunca ficar negativo
+            sql = "UPDATE material SET quantidade = quantidade - %s WHERE id = %s AND quantidade >= %s"
+            valores = (quantidade, id_material, quantidade)
         else:
             raise ValueError("Ação inválida. Use 'adicionar' ou 'subtrair'.")
+
+        # quantidade zero ou negativa não faz sentido (e negativa inverteria a operação)
+        if quantidade <= 0:
+            return False
 
         try:
             with cria_conexao() as conexao:
                 with conexao.cursor() as cursor:
-                    cursor.execute(sql, (quantidade, id_material))
+                    cursor.execute(sql, valores)
+
+                    # nenhuma linha alterada = material não existe ou estoque insuficiente
+                    if cursor.rowcount == 0:
+                        conexao.rollback()
+                        return False
+
+                    # toda retirada fica registrada na tabela de saídas (usada no card "Retiradas de Hoje")
+                    if acao == "subtrair":
+                        cursor.execute(
+                            "INSERT INTO saida_material (id_usuario, id_material, quantidade_retirada) VALUES (%s, %s, %s)",
+                            (id_usuario, id_material, quantidade)
+                        )
+
+                    # baixa no estoque e registro da saída são salvos juntos
                     conexao.commit()
                     return True
         except Exception as erro:
