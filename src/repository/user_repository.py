@@ -21,9 +21,11 @@ class RepositoryUser:
                     else:
                         conexao.commit() # salva no banco de dados
                         print('Sucesso: operação realizada!')
+                        return True
 
         except Exception as erro:
             print(f'Erro na classe Repositoryuser: {erro}')
+            return None if retorno else False # False avisa quem chamou que não salvou
 
 
     
@@ -52,7 +54,7 @@ class RepositoryUser:
         sql = 'INSERT INTO usuario (matricula, senha, nome, email, telefone) VALUES (%s, %s, %s, %s, %s)'
         valores = (objeto.matricula, objeto.senha, objeto.nome, objeto.email, objeto.telefone)
 
-        self.cursor(sql=sql, valor=valores)
+        return self.cursor(sql=sql, valor=valores) # True se salvou, False se deu erro
 
 
 
@@ -62,7 +64,8 @@ class RepositoryUser:
 
         resultado = self.cursor(sql=sql, valor=val, retorno=True)
 
-        return resultado[0] > 0
+        # se a consulta falhar o cursor devolve None, e aí não existe resultado[0]
+        return bool(resultado) and resultado[0] > 0
 
 
 
@@ -106,12 +109,12 @@ if __name__ == "__main__":
 
 
 
-    u = Usuario(matricula=matricula, senha=senha, nome=nome, email=email, telelefone=telefone)
+    u = Usuario(matricula=matricula, senha=senha, nome=nome, email=email, telefone=telefone)
 
     r = RepositoryUser()
     r.cadastrar_usuario(u)
     '''
     r = RepositoryUser()
-    usuario = r.busacar_dados(123456789, '123456789')
+    usuario = r.buscar_dados(123456789, '123456789')
 
     print(usuario)

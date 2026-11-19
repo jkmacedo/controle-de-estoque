@@ -18,7 +18,8 @@ class ControllerUser:
 
             resultado_busca = self.repo.buscar_dados(matricula=dados["matricula"], senha=dados["senha"]) # busca no banco de dados que o usuario paasou se exitir
             if resultado_busca: # se tem dados no banco
-                matricula = self.tratar_strig(resultado_busca[0])
+                # o banco guarda a matrícula como int e perde os zeros à esquerda, então completa de novo até 9 dígitos
+                matricula = self.tratar_strig(resultado_busca[0]).zfill(9)
                 senha = self.tratar_strig(resultado_busca[1])
 
                 if self.tamanho_is_numero(matricula):
@@ -42,19 +43,24 @@ class ControllerUser:
         if not dados_verificados:
             return
         
+        # definido antes do try pra poder usar no except mesmo se der erro cedo
+        eml = str(dados_verificados["email"])
+
         try:
 
             mat = int(dados_verificados["matricula"])
             sen = str(dados_verificados["senha"])
             nom = str(dados_verificados["nome"])
-            eml = str(dados_verificados["email"])
             tel = str(dados_verificados["telefone"])
 
             # passoados os dados para um objeto
-            user = Usuario(matricula=mat, senha=sen, nome=nom, email=eml, telelefone=tel)
+            user = Usuario(matricula=mat, senha=sen, nome=nom, email=eml, telefone=tel)
 
             # cadastrei no banco
-            self.repo.cadastrar_usuario(objeto=user)
+            # o repositório devolve False se não conseguiu salvar, então não mostra "Cadastrado!" à toa
+            if not self.repo.cadastrar_usuario(objeto=user):
+                self.bw.msgbox_incorreto(mensagem='Não foi possivel salvar por motivos técnicos') # pop-up
+                return
 
             self.bw.msgbox_correto(mensagem='Usuário Cadastrado!') # pop-up
 
@@ -63,7 +69,8 @@ class ControllerUser:
         except Exception as erro:
             # obs: como as vezes da erro ao carregar a imagem do mensagebox do custamtkinter, adcionei uma verificação pra ver se o cadastro ocorreu e usei o tkinter pra evitar o erro;
             if self.repo.existe_no_banco('email', eml): 
-                messagebox.showinfo('Usuário Cadastrado!')
+                messagebox.showinfo('Aviso do Sistema', 'Usuário Cadastrado!')
+                return True # o cadastro foi salvo, só o pop-up do CTkMessagebox que falhou
             else:
                 self.bw.msgbox_incorreto(mensagem='Não foi possivel salvar por motivos técnicos') # pop-up
 
@@ -123,8 +130,10 @@ class ControllerUser:
         # --- TELEFONE ---
         telefone = str(dados_dict["telefone"]).strip()
         if telefone.isnumeric() and len(telefone) == 11:
-            if not self.repo.existe_no_banco('telefone', telefone):
-                dados_corretos["telefone"] = self.formatar_telefone(telefone)
+            # o telefone é salvo formatado, então a busca por duplicado também precisa usar o formato salvo
+            telefone_formatado = self.formatar_telefone(telefone)
+            if not self.repo.existe_no_banco('telefone', telefone_formatado):
+                dados_corretos["telefone"] = telefone_formatado
             else:
                 self.bw.msgbox_incorreto(mensagem='Telefone já cadastrado') # pop-up
                 return

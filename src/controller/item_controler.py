@@ -14,7 +14,7 @@ class ControllerItem:
         # limpa o treeview antes inserir
         for i in tv.get_children():
             tv.delete(i)
-        # busca os dados no database
+        # busca os dados no database (lista vazia se não houver itens)
         for item in self.repo.buscar_itens():
             id, nome, endereco, quantidade, categoria = item
             tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
@@ -45,10 +45,32 @@ class ControllerItem:
                 tv.insert("", "end", values=(id, nome, endereco, quantidade, categoria))
 
 
-    def adionar_ou_subtrair_estoque(self, id_material, quantidade, acao):
-        if acao == "adicionar":
-            self.repo.adionar_ou_subtrair_estoque(id_material, quantidade, acao)
-        elif acao == "subtrair":
-            self.repo.adionar_ou_subtrair_estoque(id_material, quantidade, acao)
-        else:
+    def adionar_ou_subtrair_estoque(self, id_material, quantidade, acao, id_usuario=None):
+        if acao not in ("adicionar", "subtrair"):
             raise ValueError("Ação inválida. Use 'adicionar' ou 'subtrair'.")
+
+        # nenhum item selecionado na tabela
+        if id_material is None:
+            self.bw.msgbox_incorreto(mensagem='Selecione um item na tabela primeiro!') # pop-up
+            return False
+
+        # a quantidade vem do Entry como texto, então precisa ser um número inteiro
+        try:
+            quantidade = int(str(quantidade).strip())
+        except ValueError:
+            self.bw.msgbox_incorreto(mensagem='Digite uma quantidade válida (apenas números inteiros)!') # pop-up
+            return False
+
+        if quantidade <= 0:
+            self.bw.msgbox_incorreto(mensagem='A quantidade deve ser maior que zero!') # pop-up
+            return False
+
+        sucesso = self.repo.adionar_ou_subtrair_estoque(id_material, quantidade, acao, id_usuario)
+
+        if not sucesso:
+            if acao == "subtrair":
+                self.bw.msgbox_incorreto(mensagem='Não foi possível dar baixa. Verifique se há estoque suficiente!') # pop-up
+            else:
+                self.bw.msgbox_incorreto(mensagem='Não foi possível atualizar o estoque!') # pop-up
+
+        return sucesso
