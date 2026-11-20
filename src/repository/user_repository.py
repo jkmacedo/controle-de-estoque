@@ -30,7 +30,8 @@ class RepositoryUser:
 
     
     def buscar_dados(self, matricula, senha): # busca dados pra verificar o so a validação do loginl
-        sql = 'SELECT matricula, senha FROM usuario WHERE matricula = %s AND senha = %s AND status_user = 1'
+        # o id vem por último pra não mudar as posições [0] (matrícula) e [1] (senha) que o controller já usa
+        sql = 'SELECT matricula, senha, id FROM usuario WHERE matricula = %s AND senha = %s AND status_user = 1'
         valores = (matricula, senha)
         try:
             with cria_conexao() as conexao:

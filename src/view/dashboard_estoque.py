@@ -7,8 +7,11 @@ from src.view.base_windows import BaseWindows
 
 class DashboardEstoque(BaseWindows):
 
-    def __init__(self, titulo='Dashbard', largura=950, altura=550): 
+    def __init__(self, titulo='Dashbard', largura=950, altura=550, id_usuario=None):
         super().__init__(titulo, largura, altura)
+
+        # id de quem fez login; usado pra registrar quem retirou o material (None se abrir o dashboard direto, sem login)
+        self.id_usuario = id_usuario
 
         self.control = ControllerItem()
 
@@ -224,7 +227,7 @@ class DashboardEstoque(BaseWindows):
 
     def _movimentar_estoque(self, acao):
         # o controller valida o item selecionado e a quantidade, e mostra o pop-up se algo estiver errado
-        sucesso = self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), self.qtd_item.get(), acao)
+        sucesso = self.control.adionar_ou_subtrair_estoque(self._ao_clicar_item(self.tree), self.qtd_item.get(), acao, self.id_usuario)
 
         if sucesso:
             self.control.Preencher_treview(tv=self.tree)

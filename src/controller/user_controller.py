@@ -25,7 +25,8 @@ class ControllerUser:
                 if self.tamanho_is_numero(matricula):
                     if matricula == dados["matricula"] and senha == dados["senha"]:  # verifico se oque o usaurio digitou está igual ao está igual ao banco
                         self.bw.msgbox_correto(mensagem='Sucesso na validação! Bem-vindo') # chamando pop-up
-                        return True    
+                        # devolve o id do usuário (sempre maior que 0, então continua valendo como "deu certo") pra tela saber quem logou
+                        return resultado_busca[2]
                 else:
                     self.bw.msgbox_incorreto(mensagem='A matricula deve ter 9 carcteris e todos números') #chamando pop-up
 

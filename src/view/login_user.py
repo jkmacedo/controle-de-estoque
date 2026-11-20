@@ -104,7 +104,7 @@ class LoginUser(BaseWindows):
                "matricula": self.matricula_login.get(), # pega o valor que o usuario digitou na matricula
                "senha": self.senha_login.get() # pega o valor que o usuario digitou na senha
           }
-          funcionou = self.controle.validar_dados(dados=dados) # chamo a função verificar os dados e retorn "true" se der certo
+          id_usuario = self.controle.validar_dados(dados=dados) # chamo a função verificar os dados e retorna o id do usuário se der certo (ou None se não)
 
           # limpa os campos matricula e senha nos entry's
           self.matricula_login.delete(0, 'end')
@@ -112,12 +112,13 @@ class LoginUser(BaseWindows):
 
 
           # se usuario e senha tiver correto eu chamo o dashbord
-          if funcionou:
+          if id_usuario:
                # igual ao cadastro: espera 150 ms (o pop-up de "Bem-vindo" aparecer) e então troca de tela
-               self.after(150, self._abrir_dashboard)
+               # o lambda leva o id do usuário que logou até o método que abre o dashboard
+               self.after(150, lambda: self._abrir_dashboard(id_usuario))
 
 
-     def _abrir_dashboard(self):
+     def _abrir_dashboard(self, id_usuario):
           # importo aqui dentro pra só carregar o dashboard (e a consulta ao banco dele) depois do login dar certo
           from src.view.dashboard_estoque import DashboardEstoque
 
@@ -126,8 +127,8 @@ class LoginUser(BaseWindows):
           # sai do "mainloop" do login
           self.quit()
 
-          # cria a tela do dashboard
-          dashboard = DashboardEstoque()
+          # cria a tela do dashboard, dizendo quem está logado
+          dashboard = DashboardEstoque(id_usuario=id_usuario)
           # mantém a tela aberta
           dashboard.mainloop()
 
