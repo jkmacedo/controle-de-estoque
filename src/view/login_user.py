@@ -113,7 +113,23 @@ class LoginUser(BaseWindows):
 
           # se usuario e senha tiver correto eu chamo o dashbord
           if funcionou:
-               print('DASHBORD')
+               # igual ao cadastro: espera 150 ms (o pop-up de "Bem-vindo" aparecer) e então troca de tela
+               self.after(150, self._abrir_dashboard)
+
+
+     def _abrir_dashboard(self):
+          # importo aqui dentro pra só carregar o dashboard (e a consulta ao banco dele) depois do login dar certo
+          from src.view.dashboard_estoque import DashboardEstoque
+
+          # esconde a janela de login pro usuário achar que ela fechou instantaneamente
+          self.withdraw()
+          # sai do "mainloop" do login
+          self.quit()
+
+          # cria a tela do dashboard
+          dashboard = DashboardEstoque()
+          # mantém a tela aberta
+          dashboard.mainloop()
 
 
 
