@@ -2,6 +2,7 @@ from tkinter import messagebox
 from src.repository.user_repository import RepositoryUser
 from src.view.base_windows import BaseWindows
 from src.models.user_model import Usuario
+from src.security.senha import gerar_hash, senha_confere, TAMANHO_MAXIMO_BYTES
 
 class ControllerUser:
     def __init__(self):
@@ -16,21 +17,27 @@ class ControllerUser:
             self.bw.msgbox_incorreto(mensagem='Você deve preencher matricula e senha!') #chamando o pop-up
         else:
 
-            resultado_busca = self.repo.buscar_dados(matricula=dados["matricula"], senha=dados["senha"]) # busca no banco de dados que o usuario paasou se exitir
+            # busca o usuário só pela matrícula (a senha não vai mais pro SQL, o banco guarda apenas o hash dela)
+            resultado_busca = self.repo.buscar_dados(matricula=dados["matricula"])
             if resultado_busca: # se tem dados no banco
                 # o banco guarda a matrícula como int e perde os zeros à esquerda, então completa de novo até 9 dígitos
                 matricula = self.tratar_strig(resultado_busca[0]).zfill(9)
-                senha = self.tratar_strig(resultado_busca[1])
+                hash_salvo = self.tratar_strig(resultado_busca[1]) # o que está no banco é o hash, não a senha
 
                 if self.tamanho_is_numero(matricula):
-                    if matricula == dados["matricula"] and senha == dados["senha"]:  # verifico se oque o usaurio digitou está igual ao está igual ao banco
+                    # confere a matrícula e pergunta ao bcrypt se a senha digitada gera aquele hash
+                    if matricula == dados["matricula"] and senha_confere(dados["senha"], hash_salvo):
                         self.bw.msgbox_correto(mensagem='Sucesso na validação! Bem-vindo') # chamando pop-up
-                        return True    
+                        # devolve o id do usuário (sempre maior que 0, então continua valendo como "deu certo") pra tela saber quem logou
+                        return resultado_busca[2]
+                    else:
+                        # mesma mensagem pra matrícula inexistente e senha errada, pra não revelar qual dos dois falhou
+                        self.bw.msgbox_incorreto(mensagem='Matrícula ou senha incorreta') # chamando pop-up
                 else:
                     self.bw.msgbox_incorreto(mensagem='A matricula deve ter 9 carcteris e todos números') #chamando pop-up
 
             else:
-                self.bw.msgbox_incorreto(mensagem='Usuário não encontrado') # chamando pop-up
+                self.bw.msgbox_incorreto(mensagem='Matrícula ou senha incorreta') # chamando pop-up
                 
                 
                 
@@ -49,7 +56,8 @@ class ControllerUser:
         try:
 
             mat = int(dados_verificados["matricula"])
-            sen = str(dados_verificados["senha"])
+            # a senha nunca vai pro banco como foi digitada: salva só o hash dela
+            sen = gerar_hash(str(dados_verificados["senha"]))
             nom = str(dados_verificados["nome"])
             tel = str(dados_verificados["telefone"])
 
@@ -145,15 +153,15 @@ class ControllerUser:
         senha = str(dados_dict["senha"]).strip()
         confirma_senha = str(dados_dict["senha confirma"]).strip()
 
-        # Verifica se tem 8 caracteres e se não há espaços no meio da string original
-        if len(senha) == 8 and ' ' not in dados_dict["senha"]:
+        # Verifica se tem no mínimo 8 caracteres, se cabe no limite do bcrypt (72 bytes) e se não há espaços na string original
+        if len(senha) >= 8 and len(senha.encode("utf-8")) <= TAMANHO_MAXIMO_BYTES and ' ' not in dados_dict["senha"]:
             if senha == confirma_senha:
                 dados_corretos["senha"] = senha
             else:
                 self.bw.msgbox_incorreto(mensagem='As senhas devem ser iguais') # pop-up
                 return
         else:
-            self.bw.msgbox_incorreto(mensagem='A senha deve conter 8 caracteres e não pode conter espaços') # pop-up
+            self.bw.msgbox_incorreto(mensagem='A senha deve ter de 8 a 72 caracteres e não pode conter espaços') # pop-up
             return
 
 

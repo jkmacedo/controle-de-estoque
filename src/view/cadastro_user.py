@@ -74,7 +74,7 @@ class CadastroUser(BaseWindows):
         senha_label = self.criar_label(self.frame_principal, texto='Senha', negrito=True, cor_texto=self.cores["preto"])
         senha_label.place(relx=0, y=320)
         # entry responsavel por pegar a SENHA DO USUARIO
-        self.senha = self.criar_entry(self.frame_principal, largura=180)
+        self.senha = self.criar_entry(self.frame_principal, largura=180, senha=True) # senha=True mostra asteriscos em vez do texto
         self.senha.place(relx=0, y=350)
         
         # texto confirmação de senha
