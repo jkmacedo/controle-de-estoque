@@ -33,7 +33,7 @@ class CadastroUser(BaseWindows):
 
         # lebel onde a vai estar o texto
         mensagem = self.criar_label(frame_mensagem, texto='GESTÃO DE ALMOXARIFADO', tamanho_letra=22, negrito=True, cor_texto=self.cores["amarelo"])
-        mensagem.place(relx=0, x=20, y=10)
+        mensagem.place(relx=0, x=30, y=13)
 
     
     def field(self): # responsável por guardar os windget pra obter dados do usuario
