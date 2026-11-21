@@ -29,16 +29,17 @@ class RepositoryUser:
 
 
     
-    def buscar_dados(self, matricula, senha): # busca dados pra verificar o so a validação do loginl
-        # o id vem por último pra não mudar as posições [0] (matrícula) e [1] (senha) que o controller já usa
-        sql = 'SELECT matricula, senha, id FROM usuario WHERE matricula = %s AND senha = %s AND status_user = 1'
-        valores = (matricula, senha)
+    def buscar_dados(self, matricula): # busca o usuário pela matrícula pra verificar a validação do login
+        # não filtra mais pela senha: o banco guarda só o hash, então quem confere a senha é o controller (com bcrypt)
+        # a posição [1] agora é o hash da senha, e o id continua por último
+        sql = 'SELECT matricula, senha, id FROM usuario WHERE matricula = %s AND status_user = 1'
+        valores = (matricula,)
         try:
             with cria_conexao() as conexao:
                 with conexao.cursor() as cursor:
                     cursor.execute(sql, valores)
 
-                    usuario = cursor.fetchone() # pegando o dado que coresponde a matricula e senha
+                    usuario = cursor.fetchone() # pegando o usuário que corresponde à matrícula
 
                     if usuario:
                         return usuario # retorna a tupla com todos os valores
@@ -116,6 +117,6 @@ if __name__ == "__main__":
     r.cadastrar_usuario(u)
     '''
     r = RepositoryUser()
-    usuario = r.buscar_dados(123456789, '123456789')
+    usuario = r.buscar_dados(123456789)
 
     print(usuario)

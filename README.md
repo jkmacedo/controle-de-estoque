@@ -27,6 +27,7 @@ controle-de-estoque/
     ├── database/            # conexão com o MySQL
     ├── models/              # classes que representam os dados (Usuario, Material...)
     ├── repository/          # único lugar onde o SQL é escrito
+    ├── security/            # hash e conferência de senhas (bcrypt)
     ├── controller/          # validações e regras de negócio
     └── view/                # telas (login, cadastro, dashboard)
 ```
@@ -72,6 +73,8 @@ DB_NOME=almoxarifado
 ```
 O arquivo `.env` guarda a senha do banco e **não é enviado ao GitHub** (já está no `.gitignore`).
 
+> **Já tinha usuários cadastrados antes do hash de senhas?** As senhas deles estão em texto puro e não funcionam mais no login. Converta-as uma única vez com `python -m scripts.migrar_senhas` (faça um backup antes) ou cadastre os usuários de novo.
+
 **5. Execute**
 ```bash
 python main.py
@@ -88,7 +91,7 @@ Rode sempre a partir da pasta raiz do projeto.
    - **E-mail:** apenas letras e números antes do domínio, que é escolhido na lista
    - **Matrícula:** exatamente 9 números
    - **Telefone:** 11 números (DDD + número), sem espaços ou traços
-   - **Senha:** exatamente 8 caracteres, sem espaços
+   - **Senha:** de 8 a 72 caracteres, sem espaços. O banco guarda apenas o hash da senha (bcrypt), nunca a senha digitada
 3. Matrícula, e-mail e telefone não podem estar repetidos.
 
 **Cadastrando materiais:** por enquanto ainda não existe tela para isso, então os materiais são inseridos direto no banco. Exemplo:
